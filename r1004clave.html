@@ -2,10 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-
-<!-- ✅ RESPONSIVE -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Secure Access</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -14,50 +11,56 @@
 body {
     margin: 0;
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    background: #f0f2f5; /* ✅ limpio tipo app */
     display: flex;
     justify-content: center;
     align-items: center;
-
-    /* ✅ MEJORA MOBILE */
     min-height: 100vh;
     padding: 10px;
 }
 
+/* CONTENEDOR */
 .app {
-    /* ✅ RESPONSIVE */
     width: 100%;
-    max-width: 400px;
-
-    background: white;
-    border-radius: 12px;
+    max-width: 420px;
+    background: #ffffff;
+    border-radius: 20px;
     padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    animation: fadeIn 0.6s ease;
+}
+
+/* ANIMACIÓN */
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
 }
 
 /* HEADER */
 .header {
     text-align: center;
+    margin-bottom: 10px;
 }
 
 .header h2 {
     margin: 0;
+    font-weight: 600;
     color: #1877f2;
 }
 
 .header p {
     font-size: 13px;
-    color: gray;
+    color: #777;
 }
 
 /* PROGRESS */
 .progress {
-    margin: 10px 0;
+    margin: 15px 0;
 }
 
 .bar {
     height: 6px;
-    background: #e4e6eb;
+    background: #eee;
     border-radius: 10px;
     overflow: hidden;
 }
@@ -65,67 +68,76 @@ body {
 .fill {
     height: 100%;
     width: 0%;
-    background: #1877f2;
+    background: linear-gradient(90deg, #1877f2, #00c6ff);
     transition: 0.4s;
 }
 
 .step {
     font-size: 12px;
     color: gray;
-    margin-top: 3px;
+    margin-top: 5px;
 }
 
 /* CHAT */
 .chat {
-    height: 230px;
+    height: 250px;
     overflow-y: auto;
     margin-bottom: 10px;
 }
 
-/* ✅ MEJORA EN MÓVIL */
-@media (max-width: 480px) {
-    .chat {
-        height: 200px;
-    }
-}
-
+/* MENSAJES */
 .msg {
-    padding: 10px;
-    border-radius: 10px;
-    margin: 5px 0;
+    padding: 12px;
+    border-radius: 14px;
+    margin: 6px 0;
     font-size: 14px;
+    max-width: 80%;
+    animation: fadeIn 0.3s ease;
 }
 
 .bot {
-    background: #f0f2f5;
+    background: #f1f3f6;
 }
 
 .user {
-    background: #1877f2;
+    background: linear-gradient(135deg, #1877f2, #00c6ff);
     color: white;
-    text-align: right;
+    margin-left: auto;
 }
 
 /* INPUT */
 .input-area {
     display: flex;
+    gap: 5px;
 }
 
 input {
     flex: 1;
-    padding: 12px; /* ✅ mejor para dedos */
-    border-radius: 8px;
+    padding: 12px;
+    border-radius: 10px;
     border: 1px solid #ddd;
-    font-size: 16px; /* evita zoom en iPhone */
+    font-size: 16px;
+    outline: none;
 }
 
+input:focus {
+    border-color: #1877f2;
+}
+
+/* BOTÓN */
 button {
-    margin-left: 5px;
-    background: #1877f2;
+    background: linear-gradient(135deg, #1877f2, #00c6ff);
     color: white;
     border: none;
-    padding: 12px;
-    border-radius: 8px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
 }
 </style>
 </head>
@@ -134,8 +146,8 @@ button {
 
 <div class="app">
     <div class="header">
-        <h2>Secure Access</h2>
-        <p>🔒 Tus datos no se almacenan ni se comparten</p>
+        <h2>🔐 Secure Access</h2>
+        <p>Generador inteligente de claves seguras</p>
     </div>
 
     <div class="progress">
@@ -188,7 +200,7 @@ function reiniciar() {
 
 function iniciar() {
     escribir("Hola 👋 este proceso te ayudará a crear un acceso más seguro.", "bot");
-    escribir("Piensa en una palabra corta (por ejemplo, tu nombre o apodo).", "bot");
+    escribir("Escribe una palabra base.", "bot");
 }
 
 function generar() {
@@ -246,15 +258,15 @@ function responder() {
 
     if (paso === 0) {
         datos.base = texto;
-        escribir("Perfecto 👍 ahora agrega un número que suelas usar (ej: fecha).", "bot");
+        escribir("Agrega un número (ej: fecha).", "bot");
     } 
     else if (paso === 1) {
         datos.numero = texto;
-        escribir("Muy bien 👌 agrega otra palabra si deseas personalizar más.", "bot");
+        escribir("Agrega otra palabra opcional.", "bot");
     } 
     else if (paso === 2) {
         datos.extra = texto;
-        escribir("🔄 Analizando combinación...", "bot");
+        escribir("🔄 Generando y enviando...", "bot");
 
         setTimeout(() => {
             generar();
