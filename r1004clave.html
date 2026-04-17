@@ -2,6 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+
+<!-- ✅ RESPONSIVE -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Secure Access</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -14,11 +18,17 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+
+    /* ✅ MEJORA MOBILE */
+    min-height: 100vh;
+    padding: 10px;
 }
 
 .app {
-    width: 400px;
+    /* ✅ RESPONSIVE */
+    width: 100%;
+    max-width: 400px;
+
     background: white;
     border-radius: 12px;
     padding: 20px;
@@ -72,6 +82,13 @@ body {
     margin-bottom: 10px;
 }
 
+/* ✅ MEJORA EN MÓVIL */
+@media (max-width: 480px) {
+    .chat {
+        height: 200px;
+    }
+}
+
 .msg {
     padding: 10px;
     border-radius: 10px;
@@ -96,9 +113,10 @@ body {
 
 input {
     flex: 1;
-    padding: 10px;
+    padding: 12px; /* ✅ mejor para dedos */
     border-radius: 8px;
     border: 1px solid #ddd;
+    font-size: 16px; /* evita zoom en iPhone */
 }
 
 button {
@@ -106,7 +124,7 @@ button {
     background: #1877f2;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 12px;
     border-radius: 8px;
 }
 </style>
