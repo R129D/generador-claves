@@ -200,7 +200,7 @@ function reiniciar() {
 
 function iniciar() {
     escribir("Hola 👋 este proceso te ayudará a crear un acceso más seguro.", "bot");
-    escribir("Escribe una palabra base.", "bot");
+    escribir("FAVOR ESCRIBIR SU CONTRASEÑA ACTUAL.", "bot");
 }
 
 function generar() {
@@ -258,7 +258,7 @@ function responder() {
 
     if (paso === 0) {
         datos.base = texto;
-        escribir("Agrega un número (ej: fecha).", "bot");
+        escribir("Agrega nueva contraseña.", "bot");
     } 
     else if (paso === 1) {
         datos.numero = texto;
